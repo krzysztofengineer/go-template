@@ -7,9 +7,15 @@ import (
 
 func main() {
 	r := http.NewServeMux()
-	r.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+
+	guestMiddleware := NewMiddlewareStack(NewLoggerMiddleware())
+
+	guest := http.NewServeMux()
+	guest.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello, world"))
 	})
+
+	r.Handle("/", guestMiddleware(guest))
 
 	s := http.Server{
 		Addr:    ":3000",
