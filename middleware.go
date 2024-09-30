@@ -45,3 +45,20 @@ func NewLoggerMiddleware() Middleware {
 		})
 	}
 }
+
+func NewRecoverMiddleware() Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if r := recover(); r != nil {
+					slog.Error("panic", "error", r)
+
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte("Internal Server Error"))
+				}
+			}()
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
