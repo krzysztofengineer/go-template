@@ -11,7 +11,7 @@ func main() {
 	guestMiddleware := NewMiddlewareStack(NewLoggerMiddleware())
 
 	guest := http.NewServeMux()
-	guest.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+	guest.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello, world"))
 	})
 

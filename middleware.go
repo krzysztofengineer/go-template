@@ -27,7 +27,21 @@ func NewLoggerMiddleware() Middleware {
 
 			next.ServeHTTP(rw, r)
 
-			slog.Info(fmt.Sprintf("%d %s %s", rw.statusCode, r.Method, r.URL), "time=", time.Since(start))
+			var color string
+			switch {
+			case rw.statusCode >= 100 && rw.statusCode <= 199:
+				color = "\033[37m"
+			case rw.statusCode >= 200 && rw.statusCode <= 299:
+				color = "\033[32m"
+			case rw.statusCode >= 300 && rw.statusCode <= 399:
+				color = "\033[33m"
+			case rw.statusCode >= 400 && rw.statusCode <= 499:
+				color = "\033[34m"
+			case rw.statusCode >= 500:
+				color = "\033[31m"
+			}
+
+			slog.Info(fmt.Sprintf("%s%d\033[0m %s %s", color, rw.statusCode, r.Method, r.URL), "time=", time.Since(start))
 		})
 	}
 }
