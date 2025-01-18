@@ -1,5 +1,9 @@
 package pages
 
+import "go-template/layouts"
+
 templ Home() {
-    <div>Home Page</div>
+    @layouts.Base() {
+        Home Page
+    }
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-template/pages"
+	"go-template/static"
 	"log"
 	"log/slog"
 	"net/http"
@@ -19,12 +20,15 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(noCacheMiddleware)
 
 	r.Group(func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			pages.Home().Render(r.Context(), w)
 		})
 	})
+
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServerFS(static.FS)))
 
 	s := http.Server{
 		Addr:    ":4000",
