@@ -1,7 +1,10 @@
 package main
 
 import (
-	"go-template/pages"
+	"flag"
+	"fmt"
+	"go-template/database"
+	"go-template/handler"
 	"go-template/static"
 	"log"
 	"log/slog"
@@ -10,9 +13,22 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	_ "modernc.org/sqlite"
+)
+
+var (
+	dsn  = flag.String("dsn", ":memory:", "sqlite dsn")
+	port = flag.Int("port", 4000, "http server port")
 )
 
 func main() {
+	flag.Parse()
+
+	db := database.New(*dsn)
+
+	homeHandler := handler.NewHome(db)
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -23,19 +39,17 @@ func main() {
 	r.Use(noCacheMiddleware)
 
 	r.Group(func(r chi.Router) {
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			pages.Home().Render(r.Context(), w)
-		})
+		r.Get("/", homeHandler.Index)
 	})
 
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServerFS(static.FS)))
 
 	s := http.Server{
-		Addr:    ":4000",
+		Addr:    fmt.Sprintf(":%d", *port),
 		Handler: r,
 	}
 
-	slog.Info("http://localhost:4000")
+	slog.Info(fmt.Sprintf("http://localhost:%d", *port))
 
 	log.Fatal(s.ListenAndServe())
 }

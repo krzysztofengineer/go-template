@@ -1,9 +1,20 @@
 package pages
 
 import "go-template/layouts"
+import "go-template/store"
 
-templ Home() {
+templ Home(u store.User) {
     @layouts.Base() {
-        Home Page
+        <div class={homeWrapper()}>
+            Hello, <strong>{u.Email}</strong>!
+        </div>
     }
+}
+
+css homeWrapper() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    min-height: 100vh;
 }
