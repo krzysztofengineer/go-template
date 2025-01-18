@@ -40,6 +40,8 @@ func main() {
 
 	r.Group(func(r chi.Router) {
 		r.Get("/", homeHandler.Index)
+		r.Post("/increase", homeHandler.Increase)
+		r.Post("/decrease", homeHandler.Decrease)
 	})
 
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServerFS(static.FS)))

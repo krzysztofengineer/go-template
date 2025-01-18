@@ -2,9 +2,11 @@ package handler
 
 import (
 	"database/sql"
+	"go-template/components"
 	"go-template/pages"
 	"go-template/store"
 	"net/http"
+	"strconv"
 )
 
 type Home struct {
@@ -25,4 +27,34 @@ func (h *Home) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pages.Home(u).Render(r.Context(), w)
+}
+
+func (h *Home) Increase(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	value := r.PostFormValue("value")
+	i, err := strconv.Atoi(value)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	i++
+
+	components.Counter(strconv.Itoa(i)).Render(r.Context(), w)
+}
+
+func (h *Home) Decrease(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	value := r.PostFormValue("value")
+	i, err := strconv.Atoi(value)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	i--
+
+	components.Counter(strconv.Itoa(i)).Render(r.Context(), w)
 }

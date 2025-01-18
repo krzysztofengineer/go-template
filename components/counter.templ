@@ -1,0 +1,34 @@
+package components
+
+templ Counter(value string) {
+    <form class={counterWrapper()}>
+        <input type="hidden" name="value" value={value} />
+        <div hx-post="/decrease" hx-target="closest form" hx-swap="outerHTML" class={counterButton()}>-</div>
+        <div>{value}</div>
+        <div hx-post="/increase" hx-target="closest form" hx-swap="outerHTML" class={counterButton()}>+</div>
+    </form>
+}
+
+css counterWrapper() {
+    display: flex;
+    justify-items: space-between;
+    gap: 8px;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+css counterButton() {
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 600;
+    padding: 3px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

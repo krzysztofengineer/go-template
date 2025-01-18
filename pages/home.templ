@@ -2,11 +2,22 @@ package pages
 
 import "go-template/layouts"
 import "go-template/store"
+import "go-template/components"
 
 templ Home(u store.User) {
     @layouts.Base() {
         <div class={homeWrapper()}>
-            Hello, <strong>{u.Email}</strong>!
+            <div>
+                <div>
+                    Hello, <strong>{u.Email}</strong>!
+                </div>
+
+                <br />
+
+                <div>
+                    @components.Counter("0")
+                </div>
+            </div>
         </div>
     }
 }
