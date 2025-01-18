@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-template/pages"
 	"log"
 	"log/slog"
 	"net/http"
@@ -21,7 +22,7 @@ func main() {
 
 	r.Group(func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Hello, world"))
+			pages.Home().Render(r.Context(), w)
 		})
 	})
 
