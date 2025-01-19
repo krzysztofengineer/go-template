@@ -5,6 +5,8 @@ import (
 	"go-template/schema"
 
 	"github.com/pressly/goose/v3"
+
+	_ "modernc.org/sqlite"
 )
 
 func New(dsn string) *sql.DB {

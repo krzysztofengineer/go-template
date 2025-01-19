@@ -13,8 +13,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-
-	_ "modernc.org/sqlite"
 )
 
 var (
@@ -27,8 +25,6 @@ func main() {
 
 	db := database.New(*dsn)
 
-	homeHandler := handler.NewHome(db)
-
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -37,6 +33,8 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 	r.Use(noCacheMiddleware)
+
+	homeHandler := handler.NewHome(db)
 
 	r.Group(func(r chi.Router) {
 		r.Get("/", homeHandler.Index)
